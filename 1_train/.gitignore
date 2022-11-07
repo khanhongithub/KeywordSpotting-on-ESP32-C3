@@ -3,7 +3,6 @@
 venv/
 .env/
 env/
-models/
 __pycache__/
 *.pyc
 accuracy.txt
