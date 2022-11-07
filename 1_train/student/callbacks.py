@@ -40,7 +40,7 @@ def get_student_callbacks() -> List[tf.keras.callbacks.Callback]:
 
     early_stopping_callback = get_early_stopping_callback()
 
-    if early_stopping_callback is None:
+    if early_stopping_callback:
         callbacks.append(early_stopping_callback)
 
     return callbacks
