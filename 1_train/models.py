@@ -103,9 +103,8 @@ def create_micro_kws_xs_model(model_settings, model_name="micro_kws_xs"):
 
     # First convolution.
     x = tf.keras.layers.DepthwiseConv2D(
-        depth_multiplier=8,
-        # kernel_size=(10, 8),
-        kernel_size=(10, 8),
+        depth_multiplier=4,
+        kernel_size=(5, 4),
         strides=(2, 2),
         padding="SAME",
         activation="relu",
