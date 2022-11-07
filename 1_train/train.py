@@ -94,7 +94,7 @@ def train(model, audio_processor):
     test_data = test_data.batch(FLAGS.batch_size)
 
     # Evaluate the model performace.
-    test_loss, test_acc, _ = model.evaluate(x=test_data)
+    test_loss, test_acc = model.evaluate(x=test_data)
     print(f"Final test accuracy: {test_acc*100:.2f}%")
 
     # Extract best checkpoint
