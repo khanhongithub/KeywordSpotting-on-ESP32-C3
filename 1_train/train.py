@@ -26,7 +26,6 @@ import numpy as np
 
 import data
 import models
-from student.metrics import get_student_metrics
 from student.callbacks import get_student_callbacks
 
 
@@ -52,7 +51,7 @@ def train(model, audio_processor):
     model.compile(
         optimizer=optimizer,
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-        metrics=["accuracy", *get_student_metrics()],
+        metrics=["accuracy"],
     )
 
     # Prepare/split the dataset.
