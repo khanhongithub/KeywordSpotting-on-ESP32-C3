@@ -263,7 +263,7 @@ class AudioProcessor:
                 micro=self.micro,
             ),
             num_parallel_calls=tf.data.experimental.AUTOTUNE,
-        ).cache()
+        )
 
         return dataset
 
