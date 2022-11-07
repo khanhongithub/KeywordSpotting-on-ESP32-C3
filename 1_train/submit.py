@@ -46,7 +46,7 @@ def gather_files(directory):
     words_path = student / "words.txt"
     assert words_path.is_file(), f"{words_path} file does not exist"
     words = get_words(words_path)
-    assert len(words) == NUM_WORDS
+    assert len(words) == NUM_WORDS, f"Expected {NUM_WORDS} in student/words.txt"
 
     # Code
     model_code_path = student / "model.py"
