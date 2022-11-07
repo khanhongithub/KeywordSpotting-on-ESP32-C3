@@ -16,28 +16,28 @@ MATRIX_2 = tf.math.confusion_matrix(
 )
 
 
-def test_metrics_recall():
-    # matrix 1
-    np.testing.assert_almost_equal(recall(MATRIX_1, 0), 0.5)
-    np.testing.assert_almost_equal(recall(MATRIX_1, 1), 0.5)
-
-    # matrix 2
-    np.testing.assert_almost_equal(recall(MATRIX_2, 0), 0.2857142857142857)
-    np.testing.assert_almost_equal(recall(MATRIX_2, 1), 0.5)
-    np.testing.assert_almost_equal(recall(MATRIX_2, 2), 0.7)
-    np.testing.assert_almost_equal(recall(MATRIX_2, 3), 0.6)
-
-
 def test_metrics_precision():
     # matrix 1
     np.testing.assert_almost_equal(precision(MATRIX_1, 0), 0.5)
     np.testing.assert_almost_equal(precision(MATRIX_1, 1), 0.5)
 
     # matrix 2
-    np.testing.assert_almost_equal(precision(MATRIX_2, 0), 0.6666666666666666)
-    np.testing.assert_almost_equal(precision(MATRIX_2, 1), 0.25)
-    np.testing.assert_almost_equal(precision(MATRIX_2, 2), 0.7777777777777778)
-    np.testing.assert_almost_equal(precision(MATRIX_2, 3), 0.5)
+    np.testing.assert_almost_equal(precision(MATRIX_2, 0), 0.2857142857142857)
+    np.testing.assert_almost_equal(precision(MATRIX_2, 1), 0.5)
+    np.testing.assert_almost_equal(precision(MATRIX_2, 2), 0.7)
+    np.testing.assert_almost_equal(precision(MATRIX_2, 3), 0.6)
+
+
+def test_metrics_recall():
+    # matrix 1
+    np.testing.assert_almost_equal(recall(MATRIX_1, 0), 0.5)
+    np.testing.assert_almost_equal(recall(MATRIX_1, 1), 0.5)
+
+    # matrix 2
+    np.testing.assert_almost_equal(recall(MATRIX_2, 0), 0.6666666666666666)
+    np.testing.assert_almost_equal(recall(MATRIX_2, 1), 0.25)
+    np.testing.assert_almost_equal(recall(MATRIX_2, 2), 0.7777777777777778)
+    np.testing.assert_almost_equal(recall(MATRIX_2, 3), 0.5)
 
 
 def test_metrics_f1_score():
