@@ -89,7 +89,7 @@ def gather_files(directory):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="submission.zip")
+    parser.add_argument("--out", default="submission_1.zip")
     args = parser.parse_args()
 
     directory = Path(".")
