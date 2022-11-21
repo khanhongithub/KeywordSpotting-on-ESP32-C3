@@ -1,6 +1,0 @@
-[submodule "record"]
-	path = record
-	url = https://github.com/tum-ei-eda/tum-speech-recording.git
-[submodule "2_deploy/microtvm"]
-	path = 2_deploy/microtvm
-	url = https://github.com/PhilippvK/microtvm-espidf-template.git
