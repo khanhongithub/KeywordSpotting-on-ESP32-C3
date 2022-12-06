@@ -60,12 +60,7 @@ def gather_files(directory):
     assert len(words) == NUM_WORDS, f"Expected {NUM_WORDS} in student/words.txt"
     # assert WORDS == words, "Please use words matching the provided model"
 
-    return [
-        names_path,
-        words_path,
-        mlf,
-        mlf_tuned,
-    ], [
+    return [names_path, words_path, mlf, mlf_tuned,], [
         prj,
         prj_tuned,
     ]

@@ -176,7 +176,9 @@ def generic_find_serial_port(serial_number=None):
 
     # Workaround on MacOS
     if len(serial_ports) > 0:
-        serial_ports = list(filter(lambda x: "wch" not in x.name and "SLAB" not in x.name, serial_ports))
+        serial_ports = list(
+            filter(lambda x: "wch" not in x.name and "SLAB" not in x.name, serial_ports)
+        )
 
     if len(serial_ports) == 0:
         raise Exception(f"No serial port found for board {prop['board']}!")
@@ -252,6 +254,7 @@ def check_idf():
     if shutil.which(IDF_CMD) is None:
         raise RuntimeError("idf.exe not found. Please setup ESP-IDF first in you terminal session.")
 
+
 class Handler(server.ProjectAPIHandler):
     def __init__(self):
         super(Handler, self).__init__()
@@ -268,8 +271,7 @@ class Handler(server.ProjectAPIHandler):
         )
 
     # Creates extra lines added to sdkconfig.defaults file
-    EXTRA_PRJ_CONF_DIRECTIVES = {
-    }
+    EXTRA_PRJ_CONF_DIRECTIVES = {}
 
     def _create_prj_conf(self, project_dir, options):
         with open(project_dir / "sdkconfig.defaults", "w") as f:
@@ -289,7 +291,7 @@ class Handler(server.ProjectAPIHandler):
         check_idf()
         idf_args = [IDF_CMD, "--version"]
         out = check_output(idf_args).decode("utf-8")
-        version_str = re.search(r'v(\d+.\d+)', out).group(1)
+        version_str = re.search(r"v(\d+.\d+)", out).group(1)
         try:
             version = float(version_str)
         except ValueError:
@@ -342,7 +344,9 @@ class Handler(server.ProjectAPIHandler):
         )
 
         # Populate src/
-        shutil.copytree(API_SERVER_DIR / "src" / options["project_type"], project_dir, dirs_exist_ok=True)
+        shutil.copytree(
+            API_SERVER_DIR / "src" / options["project_type"], project_dir, dirs_exist_ok=True
+        )
 
         # Populate extra_files
         if options.get("extra_files_tar"):
@@ -366,14 +370,12 @@ class Handler(server.ProjectAPIHandler):
 
         check_call(idf_args, cwd=API_SERVER_DIR)
 
-
     def flash(self, options):
         check_idf()
         idf_target = options["idf_target"]
 
         idf_args = [IDF_CMD, "flash"]  # TODO(@PhilippvK): set serial port and baud?
         check_call(idf_args, cwd=API_SERVER_DIR)
-
 
     def open_transport(self, options):
         transport = EspidfSerialTransport(options)
@@ -402,7 +404,6 @@ class Handler(server.ProjectAPIHandler):
 
 
 class EspidfSerialTransport:
-
     @classmethod
     def _find_serial_port(cls, options):
         flash_runner = "espidf"  # TODO(@PhilippvK): Support standalone esptool as well?
