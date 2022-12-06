@@ -64,7 +64,7 @@ def tflite_test(model_settings, audio_processor, tflite_path, out=None, mode="te
 
     if out:
         with open(out, "w") as handle:
-            handle.write(f"ACC={test_accuracy*100:.2f}")
+            handle.write(f"ACC={accuracy*100:.2f}")
 
 
 def tflite_inference(input_data, tflite_path):

@@ -216,6 +216,7 @@ if __name__ == "__main__":
         testing_percentage=0.1,
         model_settings=model_settings,
         micro=FLAGS.micro,
+        minimal=True,
     )
 
     features = wav_to_features(

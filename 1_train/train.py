@@ -115,12 +115,16 @@ if __name__ == "__main__":
         default="http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz",
         help="Location of speech training data archive on the web.",
     )
+    try:
+        login = os.getlogin()
+    except:
+        login = "unknown"
     parser.add_argument(
         "--data_dir",
         type=str,
         default=os.getenv(
             "SPEECH_COMMANDS_DIR",
-            default=os.path.join(tempfile.gettempdir(), os.getlogin(), "speech_dataset"),
+            default=os.path.join(tempfile.gettempdir(), login, "speech_dataset"),
         ),
         help="""\
         Where to download the speech training data to.

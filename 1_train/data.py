@@ -28,6 +28,7 @@ import tarfile
 import hashlib
 import random
 import math
+from tqdm import tqdm
 from enum import Enum
 
 import numpy as np
@@ -197,6 +198,7 @@ class AudioProcessor:
         testing_percentage,
         model_settings,
         micro=True,
+        minimal=False,
     ):
         self.data_dir = Path(data_dir)
         self.model_settings = model_settings
@@ -207,15 +209,17 @@ class AudioProcessor:
         self.background_data = None
         self._set_size = {"training": 0, "validation": 0, "testing": 0}
 
-        self._download_and_extract_data(data_url, data_dir)
-        self._prepare_datasets(
-            silence_percentage,
-            unknown_percentage,
-            wanted_words,
-            validation_percentage,
-            testing_percentage,
-        )
-        self._prepare_background_data()
+        # Only download data and setup datasets if required
+        if not minimal:
+            self._download_and_extract_data(data_url, data_dir)
+            self._prepare_datasets(
+                silence_percentage,
+                unknown_percentage,
+                wanted_words,
+                validation_percentage,
+                testing_percentage,
+            )
+            self._prepare_background_data()
 
     def get_data(
         self,
@@ -415,7 +419,29 @@ class AudioProcessor:
                 sys.stdout.write(s)
                 sys.stdout.flush()
 
-            filepath, _ = urllib.request.urlretrieve(data_url, filepath, _report_hook)
+            def my_hook(t):
+                last_b = [0]
+
+                def update_to(b=1, bsize=1, tsize=None):
+                    """
+                    b  : int, optional
+                        Number of blocks transferred so far [default: 1].
+                    bsize  : int, optional
+                        Size of each block (in tqdm units) [default: 1].
+                    tsize  : int, optional
+                        Total size (in tqdm units). If [default: None] remains unchanged.
+                    """
+                    if tsize is not None:
+                        t.total = tsize
+                    t.update((b - last_b[0]) * bsize)
+                    last_b[0] = b
+
+                return update_to
+
+
+            # filepath, _ = urllib.request.urlretrieve(data_url, filepath, _report_hook)
+            with tqdm(unit = 'B', unit_scale = True, unit_divisor = 1024, miniters = 100, desc = "Dataset") as t:
+                filepath, _ = urllib.request.urlretrieve(data_url, filepath, reporthook = my_hook(t))
             print()
 
             print(f"Untarring {filename}...")
