@@ -6,7 +6,6 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
-
 /**
  * @brief Default constructor for posterior handler
  *
@@ -16,10 +15,8 @@
  * @param category_count Number of used labels.
 
  */
-PosteriorHandler::PosteriorHandler(uint32_t history_length,
-                                   uint8_t trigger_threshold_single,
-                                   uint32_t suppression_ms,
-                                   uint32_t category_count)
+PosteriorHandler::PosteriorHandler(uint32_t history_length, uint8_t trigger_threshold_single,
+                                   uint32_t suppression_ms, uint32_t category_count)
     : posterior_history_length_(history_length),
       posterior_trigger_threshold_(trigger_threshold_single * history_length),
       posterior_suppression_ms_(suppression_ms),
@@ -43,7 +40,6 @@ PosteriorHandler::PosteriorHandler(uint32_t history_length,
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */
-
 }
 
 /**
@@ -65,7 +61,6 @@ PosteriorHandler::~PosteriorHandler() {
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */
-
 }
 
 /**
@@ -79,8 +74,7 @@ PosteriorHandler::~PosteriorHandler() {
  * @return ESP_OK if no error occured.
  */
 esp_err_t PosteriorHandler::Handle(uint8_t* new_posteriors, uint32_t time_ms,
-                         size_t* top_category_index, bool* trigger) {
-
+                                   size_t* top_category_index, bool* trigger) {
 
   /* ------------------------ */
   /* ENTER STUDENT CODE BELOW */
@@ -100,8 +94,8 @@ esp_err_t PosteriorHandler::Handle(uint8_t* new_posteriors, uint32_t time_ms,
    * - Only if a detection was classified (outside of the deactivation period) the trigger argument
    *   should be set to true by the algorithm
    * - If trigger is high, the detected category index has to updated as well using the argument.
-   * - You are allowed (and required) to introduce class variables inside include/posterior.h which may
-   *   than be (de-)initialized in the constructor/destuctor above.
+   * - You are allowed (and required) to introduce class variables inside include/posterior.h which
+   * may than be (de-)initialized in the constructor/destuctor above.
    */
 
   /*
@@ -112,10 +106,10 @@ esp_err_t PosteriorHandler::Handle(uint8_t* new_posteriors, uint32_t time_ms,
   size_t top_canidate_index = 0;
   uint8_t top_canidate_value = 0;
   for (size_t i = 0; i < posterior_category_count_; i++) {
-      if (new_posteriors[i] > top_canidate_value) {
-          top_canidate_index = i;
-          top_canidate_value = new_posteriors[i];
-      }
+    if (new_posteriors[i] > top_canidate_value) {
+      top_canidate_index = i;
+      top_canidate_value = new_posteriors[i];
+    }
   }
   *trigger = true;  // no suppression
   *top_category_index = top_canidate_index;
@@ -125,7 +119,6 @@ esp_err_t PosteriorHandler::Handle(uint8_t* new_posteriors, uint32_t time_ms,
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */
-
 
   return ESP_OK;
 }

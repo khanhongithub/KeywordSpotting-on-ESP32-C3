@@ -50,8 +50,7 @@ void TVMLogf(const char* msg, ...) {
   va_end(args);
 }
 
-tvm_crt_error_t TVMPlatformMemoryAllocate(size_t num_bytes, DLDevice dev,
-                                          void** out_ptr) {
+tvm_crt_error_t TVMPlatformMemoryAllocate(size_t num_bytes, DLDevice dev, void** out_ptr) {
   return kTvmErrorFunctionCallNotImplemented;
 }
 
@@ -59,9 +58,7 @@ tvm_crt_error_t TVMPlatformMemoryFree(void* ptr, DLDevice dev) {
   return kTvmErrorFunctionCallNotImplemented;
 }
 
-void __attribute__((noreturn)) TVMPlatformAbort(tvm_crt_error_t code) {
-  exit(1);
-}
+void __attribute__((noreturn)) TVMPlatformAbort(tvm_crt_error_t code) { exit(1); }
 
 void* model_input_ptr(size_t index) { return inputs[index]; }
 

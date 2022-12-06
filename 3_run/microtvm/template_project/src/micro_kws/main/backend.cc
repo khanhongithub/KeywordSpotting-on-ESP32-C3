@@ -40,15 +40,11 @@
 
 // TODO(fabianpedd): Make threshold (or better history length) independent from
 // inference performance / inferences per second.
-constexpr size_t posterior_suppression_ms =
-    CONFIG_MICRO_KWS_POSTERIOR_SUPPRESSION_MS;
-constexpr size_t posterior_history_length =
-    CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH;
+constexpr size_t posterior_suppression_ms = CONFIG_MICRO_KWS_POSTERIOR_SUPPRESSION_MS;
+constexpr size_t posterior_history_length = CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH;
 constexpr size_t posterior_trigger_threshold =
-    CONFIG_MICRO_KWS_POSTERIOR_TRIGGER_THRESHOLD_SINGLE *
-    CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH;
+    CONFIG_MICRO_KWS_POSTERIOR_TRIGGER_THRESHOLD_SINGLE * CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH;
 constexpr size_t posterior_category_count = CONFIG_MICRO_KWS_NUM_CLASSES;
-
 
 /**
  * @brief Called if a new category was detected to handle the LEDs and Console output.
@@ -65,13 +61,13 @@ esp_err_t KeywordCallback(const char* category) {
 
   // handle LEDs
   if (strcmp(category, CONFIG_MICRO_KWS_CLASS_LABEL_0) == 0) {
-    SetLEDColor(LED_RGB_BLACK); // silence -> off
+    SetLEDColor(LED_RGB_BLACK);  // silence -> off
   } else if (strcmp(category, CONFIG_MICRO_KWS_CLASS_LABEL_1) == 0) {
-    SetLEDColor(LED_RGB_ORANGE); // unknown -> orange
+    SetLEDColor(LED_RGB_ORANGE);  // unknown -> orange
   } else if (strcmp(category, CONFIG_MICRO_KWS_CLASS_LABEL_2) == 0) {
-    SetLEDColor(LED_RGB_GREEN); // yes -> green
+    SetLEDColor(LED_RGB_GREEN);  // yes -> green
   } else if (strcmp(category, CONFIG_MICRO_KWS_CLASS_LABEL_3) == 0) {
-    SetLEDColor(LED_RGB_RED); // no -> red
+    SetLEDColor(LED_RGB_RED);  // no -> red
 #ifdef CONFIG_MICRO_KWS_CLASS_LABEL_4
   } else if (strcmp(category, CONFIG_MICRO_KWS_CLASS_LABEL_4) == 0) {
     SetLEDColor(LED_RGB_BLUE);
@@ -97,7 +93,7 @@ esp_err_t KeywordCallback(const char* category) {
     SetLEDColor(LED_RGB_MINT);
 #endif  // CONFIG_MICRO_KWS_CLASS_LABEL_9
   } else {
-    SetLEDColor(LED_RGB_BLACK); // invalid -> off
+    SetLEDColor(LED_RGB_BLACK);  // invalid -> off
     return ESP_FAIL;
   }
 
@@ -105,7 +101,8 @@ esp_err_t KeywordCallback(const char* category) {
 }
 
 /**
- * @brief Wrapper calling the posterior handler after each inference and responding to classifications.
+ * @brief Wrapper calling the posterior handler after each inference and responding to
+ * classifications.
  *
  * @param new_posteriors The raw model outputs with unsigned 8-bit values.
  * @param top_category_index The index of the detected category/label returned by reference.
@@ -113,15 +110,11 @@ esp_err_t KeywordCallback(const char* category) {
  * @return ESP_OK if no error occured.
  *
  */
-esp_err_t HandlePosteriors(uint8_t new_posteriors[category_count],
-                           size_t* top_category_index) {
+esp_err_t HandlePosteriors(uint8_t new_posteriors[category_count], size_t* top_category_index) {
   // Create a single instance with infinite lifetime (no cleanup required)
-  static PosteriorHandler *handler = new PosteriorHandler(
-    posterior_history_length,
-    posterior_trigger_threshold,
-    posterior_suppression_ms,
-    posterior_category_count
-  );
+  static PosteriorHandler* handler =
+      new PosteriorHandler(posterior_history_length, posterior_trigger_threshold,
+                           posterior_suppression_ms, posterior_category_count);
 
   // local variables
   esp_err_t ret;

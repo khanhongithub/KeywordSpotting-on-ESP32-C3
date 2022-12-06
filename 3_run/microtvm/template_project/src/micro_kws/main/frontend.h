@@ -30,7 +30,6 @@ esp_err_t InitializeFrontend();
 
 // Converts audio sample data into a more compact form that's appropriate for
 // feeding into a neural network.
-esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size,
-                               int8_t* output);
+esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size, int8_t* output);
 
 #endif  // FRONTEND_H

@@ -26,7 +26,6 @@
 #include "esp_err.h"
 #include "model_settings.h"
 
-
 /**
  * @brief
  *
@@ -36,7 +35,6 @@
  * @return ESP_OK if no error occured.
  *
  */
-esp_err_t HandlePosteriors(uint8_t new_posteriors[category_count],
-                           size_t* top_category_index);
+esp_err_t HandlePosteriors(uint8_t new_posteriors[category_count], size_t* top_category_index);
 
 #endif  // BACKEND_H

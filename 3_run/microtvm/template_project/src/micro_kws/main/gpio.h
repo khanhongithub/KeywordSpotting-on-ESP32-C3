@@ -67,8 +67,7 @@
 
 #else
 
-#error \
-    "ESP-IDF target not supported. Please provide information manually in pin_def.h"
+#error "ESP-IDF target not supported. Please provide information manually in pin_def.h"
 
 #endif
 

@@ -29,7 +29,6 @@ esp_err_t InitializeAudio();
 
 esp_err_t StopAudio();
 
-esp_err_t GetAudioData(size_t requested_size, size_t* actual_size,
-                       int8_t* data);
+esp_err_t GetAudioData(size_t requested_size, size_t* actual_size, int8_t* data);
 
 #endif  // AUDIO_H

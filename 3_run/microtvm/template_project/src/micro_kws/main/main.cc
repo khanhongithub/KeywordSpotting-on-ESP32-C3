@@ -80,8 +80,7 @@ void micro_kws(void* params) {
 
   TickType_t last_inference_ticks = xTaskGetTickCount();
   ;
-  const TickType_t min_inference_ticks =
-      (1000 / CONFIG_MICRO_KWS_MAX_RATE) / portTICK_PERIOD_MS;
+  const TickType_t min_inference_ticks = (1000 / CONFIG_MICRO_KWS_MAX_RATE) / portTICK_PERIOD_MS;
 
   while (true) {
     // Get audio data from audio input and create slices until no more data is
@@ -112,8 +111,7 @@ void micro_kws(void* params) {
       // GenerateFrontendData() function. This will convert the time domain
       // audio samples into a frequency domain representation.
       int8_t new_slice_buffer[feature_slice_size] = {0};
-      if (GenerateFrontendData((int16_t*)audio_buffer, 512, new_slice_buffer) !=
-          0) {
+      if (GenerateFrontendData((int16_t*)audio_buffer, 512, new_slice_buffer) != 0) {
         ESP_LOGE(__FILE__, "ERROR: In GenerateFrontendData().");
         return;
       }
@@ -131,8 +129,8 @@ void micro_kws(void* params) {
       // couple of memmoves and memcpys in the grand scheme of things here?
       memmove(feature_buffer, feature_buffer + feature_slice_size,
               feature_element_count - feature_slice_size);
-      memcpy(feature_buffer + feature_element_count - feature_slice_size,
-             new_slice_buffer, feature_slice_size);
+      memcpy(feature_buffer + feature_element_count - feature_slice_size, new_slice_buffer,
+             feature_slice_size);
     }
 
     // Copy the feature buffer into the model input buffer and run the

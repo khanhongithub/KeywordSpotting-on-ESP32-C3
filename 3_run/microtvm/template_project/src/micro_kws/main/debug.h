@@ -38,8 +38,7 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-esp_err_t DebugRun(int8_t* feature_data, uint8_t* category_data,
-                   uint8_t top_category_index);
+esp_err_t DebugRun(int8_t* feature_data, uint8_t* category_data, uint8_t top_category_index);
 
 esp_err_t InitializeDebug();
 

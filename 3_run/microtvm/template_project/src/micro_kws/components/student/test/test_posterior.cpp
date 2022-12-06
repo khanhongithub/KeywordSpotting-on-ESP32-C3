@@ -18,14 +18,12 @@
  * limitations under the License.
  */
 
-
 #include <limits.h>
 #include "unity.h"
 #include "esp_timer.h"
 #include "posterior.h"
 
-TEST_CASE("History length: 35, Threshold: 100, Suppression: 0 ms", "[default]")
-{
+TEST_CASE("History length: 35, Threshold: 100, Suppression: 0 ms", "[default]") {
   // constants
   constexpr uint32_t history_length = 35;
   constexpr uint8_t trigger_threshold_single = 100;
@@ -44,127 +42,125 @@ TEST_CASE("History length: 35, Threshold: 100, Suppression: 0 ms", "[default]")
   uint32_t fake_time = esp_timer_get_time() / 1000;
 
   // create instance of posterior handler to be tested
-  PosteriorHandler *handler = new PosteriorHandler(history_length, trigger_threshold_single, suppression_ms, category_count);
+  PosteriorHandler *handler = new PosteriorHandler(history_length, trigger_threshold_single,
+                                                   suppression_ms, category_count);
 
   // Fill with Silence (first 35 iterations have undefined behavior)
-  new_posteriors[0] = 255; // silence
-  new_posteriors[1] = 0; // unknown
-  new_posteriors[2] = 0; // yes
-  new_posteriors[3] = 0; // no
+  new_posteriors[0] = 255;  // silence
+  new_posteriors[1] = 0;    // unknown
+  new_posteriors[2] = 0;    // yes
+  new_posteriors[3] = 0;    // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      fake_time += time_delta;
-      trigger = false;
+    // update time and reset trigger
+    fake_time += time_delta;
+    trigger = false;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
   }
   // basic assertions (not very strict because first outputs may not be well-defined)
   TEST_ASSERT_EQUAL(0, top_category_index);
   TEST_ASSERT_TRUE(trigger_count > 0);
 
   // Fill with Unknown
-  new_posteriors[0] = 0; // silence
-  new_posteriors[1] = 255; // unknown
-  new_posteriors[2] = 0; // yes
-  new_posteriors[3] = 0; // no
+  new_posteriors[0] = 0;    // silence
+  new_posteriors[1] = 255;  // unknown
+  new_posteriors[2] = 0;    // yes
+  new_posteriors[3] = 0;    // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      fake_time += time_delta;
-      trigger = false;
+    // update time and reset trigger
+    fake_time += time_delta;
+    trigger = false;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
 
-      // after 17+-1 interations the label should schange from silence to unknown
-      if (i < 16) {
-          TEST_ASSERT_EQUAL(0, top_category_index); // silence
-      } else if (i >= 16 && i <= 18) {
-        // tol
-      } else if (i > 18) {
-          TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-      } else {
-        // should never be reached
-      }
+    // after 17+-1 interations the label should schange from silence to unknown
+    if (i < 16) {
+      TEST_ASSERT_EQUAL(0, top_category_index);  // silence
+    } else if (i >= 16 && i <= 18) {
+      // tol
+    } else if (i > 18) {
+      TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
+    } else {
+      // should never be reached
+    }
   }
 
   // further assertions (suppression_ms=0 -> continuous triggering)
   TEST_ASSERT_EQUAL(history_length, trigger_count);
-  TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-
+  TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
 
   // Fill with Mixed outputs
-  new_posteriors[0] = 16; // yes
-  new_posteriors[1] = 32; // unknown
-  new_posteriors[2] = 144; // yes
-  new_posteriors[3] = 64; // no
+  new_posteriors[0] = 16;   // yes
+  new_posteriors[1] = 32;   // unknown
+  new_posteriors[2] = 144;  // yes
+  new_posteriors[3] = 64;   // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      fake_time += time_delta;
-      trigger = false;
+    // update time and reset trigger
+    fake_time += time_delta;
+    trigger = false;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
 
-      // after 24+-1 interations the label should schange from unknown to yes
-      if (i < 23) {
-          TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-      } else if (i >= 23 && i <= 25) {
-        // tol
-      } else if (i > 25) {
-          TEST_ASSERT_EQUAL(2, top_category_index); // yes
-      } else {
-        // should never be reached
-      }
+    // after 24+-1 interations the label should schange from unknown to yes
+    if (i < 23) {
+      TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
+    } else if (i >= 23 && i <= 25) {
+      // tol
+    } else if (i > 25) {
+      TEST_ASSERT_EQUAL(2, top_category_index);  // yes
+    } else {
+      // should never be reached
+    }
   }
 
   // further assertions (suppression_ms=0 -> continuous triggering)
   TEST_ASSERT_EQUAL(history_length, trigger_count);
-  TEST_ASSERT_EQUAL(2, top_category_index); // yes
+  TEST_ASSERT_EQUAL(2, top_category_index);  // yes
 
   // cleanup
   delete handler;
 }
 
-
-TEST_CASE("History length: 35, Threshold: 100, Suppression: 100 ms", "[default]")
-{
+TEST_CASE("History length: 35, Threshold: 100, Suppression: 100 ms", "[default]") {
   // constants
   constexpr uint32_t history_length = 35;
   constexpr uint8_t trigger_threshold_single = 100;
@@ -183,116 +179,116 @@ TEST_CASE("History length: 35, Threshold: 100, Suppression: 100 ms", "[default]"
   uint32_t fake_time = esp_timer_get_time() / 1000;
 
   // create instance of posterior handler to be tested
-  PosteriorHandler *handler = new PosteriorHandler(history_length, trigger_threshold_single, suppression_ms, category_count);
+  PosteriorHandler *handler = new PosteriorHandler(history_length, trigger_threshold_single,
+                                                   suppression_ms, category_count);
 
   // Fill with Silence (first 35 iterations have undefined behavior)
-  new_posteriors[0] = 255; // silence
-  new_posteriors[1] = 0; // unknown
-  new_posteriors[2] = 0; // yes
-  new_posteriors[3] = 0; // no
+  new_posteriors[0] = 255;  // silence
+  new_posteriors[1] = 0;    // unknown
+  new_posteriors[2] = 0;    // yes
+  new_posteriors[3] = 0;    // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      trigger = false;
-      fake_time += time_delta;
+    // update time and reset trigger
+    trigger = false;
+    fake_time += time_delta;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
   }
   TEST_ASSERT_EQUAL(0, top_category_index);
   TEST_ASSERT_TRUE(trigger_count > 0);
 
   // Fill with Unknown
-  new_posteriors[0] = 0; // silence
-  new_posteriors[1] = 255; // unknown
-  new_posteriors[2] = 0; // yes
-  new_posteriors[3] = 0; // no
+  new_posteriors[0] = 0;    // silence
+  new_posteriors[1] = 255;  // unknown
+  new_posteriors[2] = 0;    // yes
+  new_posteriors[3] = 0;    // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      trigger = false;
-      fake_time += time_delta;
+    // update time and reset trigger
+    trigger = false;
+    fake_time += time_delta;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // after 17+-1 interations the label should schange from silence to unknown
-      if (i < 16) {
-          TEST_ASSERT_EQUAL(0, top_category_index); // yes
-      } else if (i >= 16 && i <= 18) {
-        // tol
-      } else if (i > 18) {
-          TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-      } else {
-        // should never be reached
-      }
+    // after 17+-1 interations the label should schange from silence to unknown
+    if (i < 16) {
+      TEST_ASSERT_EQUAL(0, top_category_index);  // yes
+    } else if (i >= 16 && i <= 18) {
+      // tol
+    } else if (i > 18) {
+      TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
+    } else {
+      // should never be reached
+    }
   }
   // further assertions (suppression_ms>0 -> expect between 1 and 3 triggers over complete window)
-  TEST_ASSERT_UINT32_WITHIN (1, 3, trigger_count);
-  TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-
+  TEST_ASSERT_UINT32_WITHIN(1, 3, trigger_count);
+  TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
 
   // Fill with Mixed
-  new_posteriors[0] = 16; // silence
-  new_posteriors[1] = 32; // unknown
-  new_posteriors[2] = 144; // yes
-  new_posteriors[3] = 64; // no
+  new_posteriors[0] = 16;   // silence
+  new_posteriors[1] = 32;   // unknown
+  new_posteriors[2] = 144;  // yes
+  new_posteriors[3] = 64;   // no
   trigger_count = 0;
   for (size_t i = 0; i < history_length; i++) {
-      // update time and reset trigger
-      trigger = false;
-      fake_time += time_delta;
+    // update time and reset trigger
+    trigger = false;
+    fake_time += time_delta;
 
-      // invoke posterior handler
-      ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
+    // invoke posterior handler
+    ret = handler->Handle(new_posteriors, fake_time, &top_category_index, &trigger);
 
-      // check if successful
-      TEST_ASSERT_EQUAL(ESP_OK, ret);
+    // check if successful
+    TEST_ASSERT_EQUAL(ESP_OK, ret);
 
-      // comment in for debugging
-      // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
+    // comment in for debugging
+    // printf("i=%u top=%u trigger=%x count=%u\n", i, top_category_index, trigger, trigger_count);
 
-      // handle outputs
-      if (trigger) {
-        trigger_count++;
-      }
+    // handle outputs
+    if (trigger) {
+      trigger_count++;
+    }
 
-      // after 14+-1 interations the label should schange from silence to unknown
-      if (i < 23) {
-          TEST_ASSERT_EQUAL(1, top_category_index); // unknown
-      } else if (i >= 23 && i <= 25) {
-        // tol
-      } else if (i > 25) {
-          TEST_ASSERT_EQUAL(2, top_category_index); // yes
-      } else {
-        // should never be reached
-      }
+    // after 14+-1 interations the label should schange from silence to unknown
+    if (i < 23) {
+      TEST_ASSERT_EQUAL(1, top_category_index);  // unknown
+    } else if (i >= 23 && i <= 25) {
+      // tol
+    } else if (i > 25) {
+      TEST_ASSERT_EQUAL(2, top_category_index);  // yes
+    } else {
+      // should never be reached
+    }
   }
 
   // further assertions (suppression_ms>0 -> expect between 1 and 4 triggers over complete window)
-  TEST_ASSERT_UINT32_WITHIN (1, 4, trigger_count);
-  TEST_ASSERT_EQUAL(2, top_category_index); // yes
+  TEST_ASSERT_UINT32_WITHIN(1, 4, trigger_count);
+  TEST_ASSERT_EQUAL(2, top_category_index);  // yes
 
   // cleanup
   delete handler;

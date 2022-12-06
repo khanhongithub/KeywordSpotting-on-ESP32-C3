@@ -42,17 +42,17 @@
 
 class PosteriorHandler {
  public:
-  explicit PosteriorHandler(uint32_t history_length = CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH,
-                            uint8_t trigger_threshold_single = CONFIG_MICRO_KWS_POSTERIOR_TRIGGER_THRESHOLD_SINGLE,
-                            uint32_t suppression_ms = CONFIG_MICRO_KWS_POSTERIOR_SUPPRESSION_MS,
-                            uint32_t category_count = CONFIG_MICRO_KWS_NUM_CLASSES);
+  explicit PosteriorHandler(
+      uint32_t history_length = CONFIG_MICRO_KWS_POSTERIOR_HISTORY_LENGTH,
+      uint8_t trigger_threshold_single = CONFIG_MICRO_KWS_POSTERIOR_TRIGGER_THRESHOLD_SINGLE,
+      uint32_t suppression_ms = CONFIG_MICRO_KWS_POSTERIOR_SUPPRESSION_MS,
+      uint32_t category_count = CONFIG_MICRO_KWS_NUM_CLASSES);
   ~PosteriorHandler();
 
-  esp_err_t Handle(uint8_t *new_posteriors, uint32_t time_ms,
-                           size_t* top_category_index, bool* trigger);
+  esp_err_t Handle(uint8_t *new_posteriors, uint32_t time_ms, size_t *top_category_index,
+                   bool *trigger);
 
  private:
-
   // Configuration
   uint32_t posterior_history_length_;
   uint32_t posterior_trigger_threshold_;
@@ -69,9 +69,6 @@ class PosteriorHandler {
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */
-
 };
-
-
 
 #endif  // POSTERIOR_H

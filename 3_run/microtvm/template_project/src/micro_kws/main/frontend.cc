@@ -53,16 +53,14 @@ esp_err_t InitializeFrontend() {
   config.log_scale.enable_log = 1;
   config.log_scale.scale_shift = 6;
 
-  if (!FrontendPopulateState(&config, &micro_features_state,
-                             audio_sample_frequency)) {
+  if (!FrontendPopulateState(&config, &micro_features_state, audio_sample_frequency)) {
     ESP_LOGE(__FILE__, "ERROR: FrontendPopulateState() failed.");
     return ESP_FAIL;
   }
   return ESP_OK;
 }
 
-esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size,
-                               int8_t* output) {
+esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size, int8_t* output) {
   // TODO(fabianpedd): Simply add the 160 directly to input without the need for
   // an extra variable. But was is this code here for anyways!?!
   const int16_t* frontend_input;
@@ -80,8 +78,8 @@ esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size,
   size_t num_samples_read = 0;
   (void)num_samples_read;
 
-  FrontendOutput frontend_output = FrontendProcessSamples(
-      &micro_features_state, frontend_input, input_size, &num_samples_read);
+  FrontendOutput frontend_output =
+      FrontendProcessSamples(&micro_features_state, frontend_input, input_size, &num_samples_read);
 
   if (frontend_output.size <= 0 || frontend_output.values == NULL) {
     ESP_LOGE(__FILE__, "ERROR: In FrontendProcessSamples().");
@@ -108,9 +106,7 @@ esp_err_t GenerateFrontendData(const int16_t* input, size_t input_size,
     // * 26.0) - 128
     constexpr int32_t value_scale = 256;
     constexpr int32_t value_div = static_cast<int32_t>((25.6f * 26.0f) + 0.5f);
-    int32_t value =
-        ((frontend_output.values[i] * value_scale) + (value_div / 2)) /
-        value_div;
+    int32_t value = ((frontend_output.values[i] * value_scale) + (value_div / 2)) / value_div;
     value -= 128;
     if (value < -128) {
       value = -128;

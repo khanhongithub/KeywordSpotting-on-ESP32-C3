@@ -37,20 +37,17 @@ static void CaptureAudioSamples(void* arg) {
   int8_t data_buf[bytes_to_read] = {0};
 
   while (1) {
-    i2s_read((i2s_port_t)I2S_PORT_ID, (void*)data_buf, (size_t)bytes_to_read,
-             (size_t*)&bytes_read, pdMS_TO_TICKS(100));
+    i2s_read((i2s_port_t)I2S_PORT_ID, (void*)data_buf, (size_t)bytes_to_read, (size_t*)&bytes_read,
+             pdMS_TO_TICKS(100));
 
     if (bytes_read < bytes_to_read) {
-      ESP_LOGE(__FILE__, "ERROR: In i2s_read(). Could ony read %d of %d bytes.",
-               bytes_read, bytes_to_read);
+      ESP_LOGE(__FILE__, "ERROR: In i2s_read(). Could ony read %d of %d bytes.", bytes_read,
+               bytes_to_read);
       return;
     }
 
-    if (xRingbufferSend(buf_handle, data_buf, bytes_read, pdMS_TO_TICKS(100)) !=
-        pdTRUE) {
-      ESP_LOGE(__FILE__,
-               "ERROR: In xRingbufferSend(). Could not send %d bytes.",
-               bytes_read);
+    if (xRingbufferSend(buf_handle, data_buf, bytes_read, pdMS_TO_TICKS(100)) != pdTRUE) {
+      ESP_LOGE(__FILE__, "ERROR: In xRingbufferSend(). Could not send %d bytes.", bytes_read);
       return;
     }
   }
@@ -120,11 +117,9 @@ esp_err_t InitializeAudio() {
     return ret;
   }
 
-  if (xTaskCreate(CaptureAudioSamples, "CaptureAudioSamples", 1024 * 32, NULL,
-                  10, &CaptureAudioSamplesHandle) != pdPASS) {
-    ESP_LOGE(
-        __FILE__,
-        "ERROR: In InitializeAudio() at xTaskCreate(CaptureAudioSamples).");
+  if (xTaskCreate(CaptureAudioSamples, "CaptureAudioSamples", 1024 * 32, NULL, 10,
+                  &CaptureAudioSamplesHandle) != pdPASS) {
+    ESP_LOGE(__FILE__, "ERROR: In InitializeAudio() at xTaskCreate(CaptureAudioSamples).");
     return ESP_FAIL;
   }
 
@@ -137,24 +132,21 @@ esp_err_t StopAudio() {
   return ESP_OK;
 }
 
-esp_err_t GetAudioData(size_t requested_size, size_t* actual_size,
-                       int8_t* data) {
+esp_err_t GetAudioData(size_t requested_size, size_t* actual_size, int8_t* data) {
   // Set returned number of bytes to zero for now.
   *actual_size = 0;
 
   // Peak into the Ringbuffer.
   size_t bytes_waiting = 0;
-  vRingbufferGetInfo(buf_handle, NULL, NULL, NULL, NULL,
-                     (UBaseType_t*)&bytes_waiting);
+  vRingbufferGetInfo(buf_handle, NULL, NULL, NULL, NULL, (UBaseType_t*)&bytes_waiting);
 
   // Check if we actually have the requested amount of bytes available. If yes,
   // get the data. If not, simply return zero.
   if (bytes_waiting >= requested_size) {
     // Get the data from the Ringbuffer.
     size_t bytes_received = 0;
-    int8_t* buf_data =
-        (int8_t*)xRingbufferReceiveUpTo(buf_handle, (size_t*)&bytes_received,
-                                        pdMS_TO_TICKS(100), requested_size);
+    int8_t* buf_data = (int8_t*)xRingbufferReceiveUpTo(buf_handle, (size_t*)&bytes_received,
+                                                       pdMS_TO_TICKS(100), requested_size);
 
     // Check whether we have encountered a wraparound in the Ringbuffer. If so,
     // we need to read a second time in order to retrieve all data. See here
@@ -171,9 +163,8 @@ esp_err_t GetAudioData(size_t requested_size, size_t* actual_size,
       requested_size -= bytes_received;
 
       // Get the rest of the data from the top of the Ringbuffer.
-      buf_data =
-          (int8_t*)xRingbufferReceiveUpTo(buf_handle, (size_t*)&bytes_received,
-                                          pdMS_TO_TICKS(100), requested_size);
+      buf_data = (int8_t*)xRingbufferReceiveUpTo(buf_handle, (size_t*)&bytes_received,
+                                                 pdMS_TO_TICKS(100), requested_size);
     }
 
     if (buf_data != NULL && bytes_received == requested_size) {
@@ -186,11 +177,10 @@ esp_err_t GetAudioData(size_t requested_size, size_t* actual_size,
       return ESP_OK;
 
     } else {
-      ESP_LOGE(
-          __FILE__,
-          "ERROR: Only read %d of %d bytes from Ringbuffer. Something went "
-          "wrong, as there should be enough data available.",
-          *actual_size, requested_size);
+      ESP_LOGE(__FILE__,
+               "ERROR: Only read %d of %d bytes from Ringbuffer. Something went "
+               "wrong, as there should be enough data available.",
+               *actual_size, requested_size);
       // TODO(fabianpedd): Should not be needed here. But maybe reintroduce as a
       // safety measure?
       // vRingbufferReturnItem(buf_handle, (void *)buf_data);

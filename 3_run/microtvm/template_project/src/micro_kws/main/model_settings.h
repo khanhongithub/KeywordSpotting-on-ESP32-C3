@@ -37,8 +37,7 @@ constexpr int32_t audio_sample_frequency = 16000;
 // a 49 by 40 grayscale picture.
 constexpr int32_t feature_slice_size = CONFIG_MICRO_KWS_NUM_BINS;
 constexpr int32_t feature_slize_count = CONFIG_MICRO_KWS_NUM_SLICES;
-constexpr int32_t feature_element_count =
-    feature_slice_size * feature_slize_count;
+constexpr int32_t feature_element_count = feature_slice_size * feature_slize_count;
 
 constexpr int32_t feature_slice_stride_ms = CONFIG_MICRO_KWS_STRIDE_SIZE_MS;
 constexpr int32_t feature_slice_duration_ms = CONFIG_MICRO_KWS_WINDOW_SIZE_MS;
