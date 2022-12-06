@@ -5,9 +5,7 @@ import tensorflow as tf
 # Further imports are NOT allowed, please use the APIs in `tf`, `tf.keras` and `tf.keras.backend`!
 
 
-def recall(
-    matrix: tf.Tensor, idx: int
-) -> tf.Tensor:
+def recall(matrix: tf.Tensor, idx: int) -> tf.Tensor:
     """Calclate the recall metric for a given confusion matrix and category.
 
     Arguments
@@ -32,9 +30,7 @@ def recall(
     return recall
 
 
-def precision(
-    matrix: tf.Tensor, idx: int
-) -> tf.Tensor:
+def precision(matrix: tf.Tensor, idx: int) -> tf.Tensor:
     """Calclate the precision metric for a given confusion matrix and category.
 
     Arguments
@@ -59,9 +55,7 @@ def precision(
     return precision
 
 
-def f1_score(
-    matrix: tf.Tensor, idx: int
-) -> tf.Tensor:
+def f1_score(matrix: tf.Tensor, idx: int) -> tf.Tensor:
     """Calclate the f1_score metric for a given confusion matrix and category.
 
     Arguments
@@ -86,9 +80,7 @@ def f1_score(
     return f1_score
 
 
-def get_student_metrics(
-    matrix: tf.Tensor, idx
-) -> Dict[str, tf.Tensor]:
+def get_student_metrics(matrix: tf.Tensor, idx) -> Dict[str, tf.Tensor]:
     ret = {
         "recall": recall(matrix, idx),
         "precision": precision(matrix, idx),

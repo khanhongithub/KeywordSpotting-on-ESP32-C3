@@ -438,10 +438,11 @@ class AudioProcessor:
 
                 return update_to
 
-
             # filepath, _ = urllib.request.urlretrieve(data_url, filepath, _report_hook)
-            with tqdm(unit = 'B', unit_scale = True, unit_divisor = 1024, miniters = 100, desc = "Dataset") as t:
-                filepath, _ = urllib.request.urlretrieve(data_url, filepath, reporthook = my_hook(t))
+            with tqdm(
+                unit="B", unit_scale=True, unit_divisor=1024, miniters=100, desc="Dataset"
+            ) as t:
+                filepath, _ = urllib.request.urlretrieve(data_url, filepath, reporthook=my_hook(t))
             print()
 
             print(f"Untarring {filename}...")
