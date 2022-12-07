@@ -43,10 +43,11 @@ set(MICROFRONTEND_SRCS
 set(KISSFFT_INCS kissfft/ kissfft/tools/)
 
 set(MLF_DIR ${CMAKE_SOURCE_DIR}/model/)
+set(CRT_DIR ${CMAKE_SOURCE_DIR}/crt/)
 
 set(TVM_SRCS ${MLF_DIR}/codegen/host/src/default_lib0.c ${MLF_DIR}/codegen/host/src/default_lib1.c)
 
-set(TVM_INCS ${MLF_DIR}/runtime/include/ ${MLF_DIR}/codegen/host/include/)
+set(TVM_INCS ${CRT_DIR}/include/ ${MLF_DIR}/codegen/host/include/)
 
 set(MICRO_KWS_SRCS audio.cc backend.cc debug.cc frontend.cc gpio.cc model_settings.cc tvm_wrapper.cc)
 

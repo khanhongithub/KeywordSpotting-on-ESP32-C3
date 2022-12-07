@@ -246,6 +246,13 @@ PROJECT_OPTIONS = [
         type="bool",
         help="Treat warnings as errors and raise an Exception.",
     ),
+    server.ProjectOption(
+        "num_classes",
+        optional=["generate_project"],
+        default=4,
+        type="int",
+        help="Nunber of labels (including silence & unknown) if project_type is 'micro_kws'",
+    ),
 ]
 
 
@@ -273,18 +280,27 @@ class Handler(server.ProjectAPIHandler):
     EXTRA_PRJ_CONF_DIRECTIVES = {}
 
     def _create_prj_conf(self, project_dir, options):
-        with open(project_dir / "sdkconfig.defaults", "w") as f:
+        dest = project_dir / "sdkconfig.defaults"
+        mode = "a" if dest.is_file() else "w"
+        with open(dest, mode) as f:
             # f.write("# For math routines\n" "CONFIG_NEWLIB_LIBC=y\n" "\n")
-            f.write("CONFIG_ESP_TASK_WDT=n\n")
-            f.write("CONFIG_ESP_CONSOLE_UART_NONE=y\n")
-            f.write("CONFIG_COMPILER_OPTIMIZATION_SIZE=y\n")
+            project_type = options["project_type"]
+            f.write("\n# Project specific sdkconfig.defaults directives\n")
+            if project_type == "host_driven":
+                f.write("CONFIG_ESP_TASK_WDT=n\n")
+                f.write("CONFIG_ESP_CONSOLE_UART_NONE=y\n")
+                f.write("CONFIG_COMPILER_OPTIMIZATION_SIZE=y\n")
+            elif project_type == "micro_kws":
+                classes = options.get("num_classes", 4)
+                f.write(f"CONFIG_MICRO_KWS_NUM_CLASSES={classes}\n")
 
-            f.write("\n# Extra sdkconfig.defaults directives\n")
+            f.write("\n# Board specific sdkconfig.defaults directives\n")
             for line, board_list in self.EXTRA_PRJ_CONF_DIRECTIVES.items():
                 if options["idf_target"] in board_list:
                     f.write(f"{line}\n")
 
             f.write("\n")
+
 
     def _get_platform_version(self) -> float:
         check_idf()
@@ -333,7 +349,16 @@ class Handler(server.ProjectAPIHandler):
         crt_path = project_dir / "crt"
         crt_path.mkdir()
 
-        self._create_prj_conf(project_dir, options)
+        CRT_COPY_ITEMS = ("include", "Makefile", "src")
+
+        for item in CRT_COPY_ITEMS:
+            src_path = os.path.join(standalone_crt_dir, item)
+            dst_path = crt_path / item
+            if os.path.isdir(src_path):
+                shutil.copytree(src_path, dst_path)
+            else:
+                shutil.copy2(src_path, dst_path)
+
 
         # Populate crt-config.h
         crt_config_dir = project_dir / "crt_config"
@@ -346,6 +371,8 @@ class Handler(server.ProjectAPIHandler):
         shutil.copytree(
             API_SERVER_DIR / "src" / options["project_type"], project_dir, dirs_exist_ok=True
         )
+
+        self._create_prj_conf(project_dir, options)
 
         # Populate extra_files
         if options.get("extra_files_tar"):
