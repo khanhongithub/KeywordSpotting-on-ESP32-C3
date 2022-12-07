@@ -6,7 +6,7 @@ This directory contains the target software that runs on the ESP32-C3. The appli
 
 It is recommended to go through the tutorial in the following order while performing the explained steps:
 
-0. Setup the Toolchain: [`estup_espidf.md`](setup_espidf.md)
+0. Setup the Toolchain: [`setup_espidf.md`](setup_espidf.md)
 1. Follow MicroTVM Tutorial: [`microtvm_tutorial_tvmc.ipynb`](microtvm_tutorial_tvmc.ipynb)
 
 ## Prerequisites
