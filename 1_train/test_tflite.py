@@ -66,6 +66,8 @@ def tflite_test(model_settings, audio_processor, tflite_path, out=None, mode="te
         with open(out, "w") as handle:
             handle.write(f"ACC={accuracy*100:.2f}")
 
+    return accuracy, confusion_matrix
+
 
 def tflite_inference(input_data, tflite_path):
     """Call forwards pass of TFLite file and returns the result.

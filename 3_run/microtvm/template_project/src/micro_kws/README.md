@@ -63,3 +63,6 @@ To debug the static memory usage of a program, the ESP-IDF provides several comm
 - `idf.py size-components`
 - `idf.py size-files`
 
+## Programming Challenge
+
+The sources for the posterior handling which needs to be implemented can be found in the `student` ESP-IDF component: [`components/student`](components/student). More information can be found in [`components/student/README.md`](components/student/README.md) and docstrings. How to use the provided unit-tests is explained in [`components/student/test/README.md`](components/student/test/README.md).

@@ -36,7 +36,6 @@ PosteriorHandler::PosteriorHandler(uint32_t history_length, uint8_t trigger_thre
    *   use plain C arrays/pointers/...
    */
 
-
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */
@@ -56,7 +55,6 @@ PosteriorHandler::~PosteriorHandler() {
    * - Every data structure allocated in the constructor above has to be cleaned up properly
    * - This can for example be achieved using free()
    */
-
 
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
@@ -89,6 +87,9 @@ esp_err_t PosteriorHandler::Handle(uint8_t* new_posteriors, uint32_t time_ms,
    * - If the calculated moving average for a class exceeds the trigger threshold a
    *   detection should be triggered (unless the deactivation period for a past detection
    *   is still active)
+   * - The trigger should be raised for all classes (including silence and unknown) since
+   *   the KeywordCallback method in backend.cc is reponsible for deciding which labels should
+   *   be ignored.
    * - The supression time (in ms) defines the duration in which registered labels shall
    *   not trigger a new detection. (However their moving average should continue to be updated)
    * - Only if a detection was classified (outside of the deactivation period) the trigger argument

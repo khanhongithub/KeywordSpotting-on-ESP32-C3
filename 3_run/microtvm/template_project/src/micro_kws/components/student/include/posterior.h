@@ -65,7 +65,6 @@ class PosteriorHandler {
   /* ENTER STUDENT CODE BELOW */
   /* ------------------------ */
 
-
   /* ------------------------ */
   /* ENTER STUDENT CODE ABOVE */
   /* ------------------------ */

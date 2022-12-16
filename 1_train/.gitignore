@@ -4,6 +4,7 @@ venv/
 .env/
 env/
 models/
+grading/
 __pycache__/
 *.pyc
 accuracy.txt

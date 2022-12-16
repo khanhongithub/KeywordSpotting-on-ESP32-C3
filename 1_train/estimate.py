@@ -162,6 +162,7 @@ def estimate_macs_per_layer(op, m, graph):
         tflite.BuiltinOperator.SOFTMAX,
         tflite.BuiltinOperator.MUL,
         tflite.BuiltinOperator.ADD,
+        tflite.BuiltinOperator.REDUCE_MAX,
     ]:
         return 0
     else:
@@ -244,6 +245,16 @@ def estimate_model_ram(m):
     return estimate_ram(tensors, layers)
 
 
+def estimate(model_path):
+    m = load_model(model_path)
+
+    estimated_rom = estimate_model_rom(m)
+    estimated_ram_bc, estimated_ram_wc = estimate_model_ram(m)
+    estimated_macs = estimate_model_macs(m)
+
+    return estimated_rom, estimated_ram_wc, estimated_ram_bc, estimated_macs
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("model")
@@ -252,11 +263,7 @@ def main():
     )
     args = parser.parse_args()
 
-    m = load_model(args.model)
-
-    estimated_rom = estimate_model_rom(m)
-    estimated_ram_wc, estimated_ram_bc = estimate_model_ram(m)
-    estimated_macs = estimate_model_macs(m)
+    estimated_rom, estimated_ram_wc, estimated_ram_bc, estimated_macs = estimate(args.model)
 
     estimations = f"""ROM={estimated_rom}
 RAM_BC={estimated_ram_bc}

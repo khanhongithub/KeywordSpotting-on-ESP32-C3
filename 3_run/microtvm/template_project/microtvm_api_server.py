@@ -301,7 +301,6 @@ class Handler(server.ProjectAPIHandler):
 
             f.write("\n")
 
-
     def _get_platform_version(self) -> float:
         check_idf()
         idf_args = [IDF_CMD, "--version"]
@@ -358,7 +357,6 @@ class Handler(server.ProjectAPIHandler):
                 shutil.copytree(src_path, dst_path)
             else:
                 shutil.copy2(src_path, dst_path)
-
 
         # Populate crt-config.h
         crt_config_dir = project_dir / "crt_config"

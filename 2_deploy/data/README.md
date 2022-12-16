@@ -17,4 +17,4 @@ Any of the following files can be passed to TVM to generate target optimized ope
 The following files are extracted from the speech_commands dataset using in Lab 1 using the script `wav2features.py`.
 
 - `no.npz`: A compressed numpy array from a preprocessed "no" sample
-- `yes.npz`: A compressed numpy array from a preprocessed "no" sample
+- `yes.npz`: A compressed numpy array from a preprocessed "yes" sample

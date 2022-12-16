@@ -11,6 +11,11 @@ It is recommended to go through the tutorial in the following order while perfor
 2. Model Library Format Overview: [`mlf_overview.md`](mlf_overview.md)
 3. *Optional:* TVM Python API Tutorial: [`tutorial_python.ipynb`](tutorial_python.ipynb)
 
+## Data
+
+For information on the provided model etc. please read [`data/README.md`](./data/README.md)
+
+**Warning:** In contrast to your Lab 1 the used model now uses the following Keywords: `yes,no,up,down,left,right,on,off`. Please consider this while working on the Lab 2 tasks.
 
 ## Prerequisites
 
@@ -63,7 +68,13 @@ If using a remote host, append: ` --no-browser --ip 0.0.0.0 --port XXXX` (where 
 ## Tasks
 **Lab 2 Tasks (Part 1):**
 
-1. TODO
+1. Generate kernels for the provided MicroKWS model (using 8 keywords) with the TVM ML compiler flow:
+    - Read and follow the steps 1. and 2. above.
+    - At the end of this section you should at least have the following files:
+        - `2_deploy/gen/mlf.tar`
+        - `2_deploy/gen/mlf_tuned.tar`
+2. Continue with the `3_run` directory for Part 2.
+
 
 ## Useful resources
 

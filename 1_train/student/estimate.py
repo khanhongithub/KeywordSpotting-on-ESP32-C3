@@ -187,7 +187,7 @@ def estimate_rom(tensors: List[MyTensor]):
 
 
 def estimate_ram(tensors: List[MyTensor], layers: List[MyLayer]):
-    """Calculate the estimated number of bytes required to store model weights in ROM.
+    """Calculate the estimated number of bytes required to store model tensors in RAM.
 
     Arguments
     ---------
@@ -201,7 +201,7 @@ def estimate_ram(tensors: List[MyTensor], layers: List[MyLayer]):
     best_case_ram_bytes : int
         Estimated RAM usage given ideal memory planning (e.g. buffers can be shared to reduce the memory footprint)
     worst_case_ram_bytes : int
-        Estimated RAM usage of buffer sharing is ot allowed (e.g. no memory planning is performed)
+        Estimated RAM usage if buffer sharing is not allowed (e.g. no memory planning is performed)
 
     Assumptions
     -----------
